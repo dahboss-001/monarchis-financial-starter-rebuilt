@@ -1,0 +1,1 @@
+export default function SiteNav(){return <nav className="nav"><a className="brand" href="/">MONARCHIS<span> FINANCIAL</span></a><div className="navlinks"><a href="/about">About</a><a href="/services">Services</a><a href="/markets">Markets</a><a href="/faq">FAQ</a><a className="navbtn" href="/auth">Client portal</a></div></nav>}

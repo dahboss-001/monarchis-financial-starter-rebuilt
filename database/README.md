@@ -1,0 +1,1 @@
+The existing Neon database was previously provisioned with tables: app_users, user_profiles, kyc_cases, financial_accounts, ledger_accounts, ledger_transactions, ledger_entries, payment_requests, support_tickets and audit_events. This project does not connect to it or run migrations. Inspect the live schema before changes.

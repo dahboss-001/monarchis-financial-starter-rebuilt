@@ -1,0 +1,1 @@
+export default function SiteFooter(){return <footer><span>© {new Date().getFullYear()} Monarchis Financial. All rights reserved.</span><span><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/risk">Risk</a></span></footer>}
