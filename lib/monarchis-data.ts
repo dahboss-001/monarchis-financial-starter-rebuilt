@@ -335,7 +335,8 @@ function mapKycCase(row: DatabaseRow): KycCaseRecord {
 }
 
 function mapSupportTicket(row: DatabaseRow): SupportTicketRecord {
-  const status = asString(readValue(row, "status"), "new");
+  const rawStatus = asString(readValue(row, "status"), "open");
+  const status = rawStatus === "open" ? "new" : rawStatus;
   return {
     id: asString(readValue(row, "id")),
     email: asString(readValue(row, "email")),
@@ -573,7 +574,7 @@ async function ensureUserProfile(
       email,
       name: name?.trim() || undefined,
       authUserId: authUserId || undefined,
-      status: "registered",
+      status: "pending",
       createdAt: now,
       updatedAt: now,
     };
@@ -870,7 +871,7 @@ export async function createSupportTicket(input: {
         email: input.email,
         subject: input.subject,
         message: input.message,
-        status: "new",
+        status: "open",
         createdAt: now,
       },
       ["email", "subject", "message", "status"],
