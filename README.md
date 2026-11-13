@@ -19,3 +19,8 @@ This project connects the client sign-up/sign-in experience to Neon Managed Auth
 
 ## Important
 The UI does not create financial accounts or move money. KYC, database profile linkage, audit events, financial ledgers, payments, withdrawals and investment execution are not implemented by this auth integration. Do not accept deposits or promise returns. Production use requires custom SMTP, HTTPS, security review, legal review and jurisdiction-specific authorisations.
+
+## Additional application features
+The app now includes a premium public website, client dashboard, and admin dashboard. Configure `DATABASE_URL` to use Neon PostgreSQL; `/api/health/database` performs a read-only `SELECT 1` check and returns only `connected`, `unconfigured`, or `unavailable`. Database reads inspect the active schema and map only recognized columns. Writes use parameterized values and transactions, including audit events when the existing schema supports them. The application does not create, alter, or delete database tables.
+
+The JSON store is development-only. It is never used in production, and database errors do not silently fall back to local data. The existing schema must include compatible tables and columns for each operation; the repository does not establish that the live schema matches its documentation. In particular, product persistence requires an existing `investment_products` table. No real-money processing or investment execution is enabled.

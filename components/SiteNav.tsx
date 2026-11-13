@@ -1,1 +1,17 @@
-export default function SiteNav(){return <nav className="nav"><a className="brand" href="/">MONARCHIS<span> FINANCIAL</span></a><div className="navlinks"><a href="/about">About</a><a href="/services">Services</a><a href="/markets">Markets</a><a href="/faq">FAQ</a><a className="navbtn" href="/auth">Client portal</a></div></nav>}
+import Link from "next/link";
+
+export default function SiteNav() {
+  return (
+    <nav className="nav">
+      <Link className="brand" href="/">MONARCHIS<span> FINANCIAL</span></Link>
+      <div className="navlinks">
+        <Link href="/about">About</Link>
+        <Link href="/services">Services</Link>
+        <Link href="/markets">Markets</Link>
+        <Link href="/faq">FAQ</Link>
+        <Link href="/contact">Contact</Link>
+        <Link className="navbtn" href="/auth">Client portal</Link>
+      </div>
+    </nav>
+  );
+}
