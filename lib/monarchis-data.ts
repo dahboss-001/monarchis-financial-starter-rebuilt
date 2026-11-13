@@ -36,7 +36,7 @@ export type KycCaseRecord = {
   country: string;
   documentType: string;
   notes: string;
-  status: "submitted" | "under_review" | "approved" | "rejected";
+  status: "submitted" | "under_review" | "approved" | "rejected" | "expired";
   createdAt: string;
 };
 
@@ -45,7 +45,7 @@ export type SupportTicketRecord = {
   email: string;
   subject: string;
   message: string;
-  status: "new" | "in_progress" | "resolved";
+  status: "new" | "in_progress" | "waiting_for_client" | "resolved" | "closed";
   createdAt: string;
 };
 
@@ -56,7 +56,7 @@ export type PaymentRequestRecord = {
   amount: number;
   currency: string;
   paymentMethod: string;
-  status: "pending" | "approved" | "rejected" | "processing";
+  status: "pending" | "approved" | "rejected" | "processing" | "settled" | "cancelled" | "failed";
   note: string;
   createdAt: string;
 };
@@ -331,7 +331,7 @@ function mapKycCase(row: DatabaseRow): KycCaseRecord {
     country: asString(readValue(row, "country")),
     documentType: asString(readValue(row, "documentType")),
     notes: asString(readValue(row, "notes")),
-    status: (["submitted", "under_review", "approved", "rejected"].includes(status)
+    status: (["submitted", "under_review", "approved", "rejected", "expired"].includes(status)
       ? status
       : "submitted") as KycCaseRecord["status"],
     createdAt: asString(readValue(row, "createdAt")),
@@ -346,7 +346,7 @@ function mapSupportTicket(row: DatabaseRow): SupportTicketRecord {
     email: asString(readValue(row, "email")),
     subject: asString(readValue(row, "subject")),
     message: asString(readValue(row, "message")),
-    status: (["new", "in_progress", "resolved"].includes(status)
+    status: (["new", "in_progress", "waiting_for_client", "resolved", "closed"].includes(status)
       ? status
       : "new") as SupportTicketRecord["status"],
     createdAt: asString(readValue(row, "createdAt")),
@@ -356,7 +356,7 @@ function mapSupportTicket(row: DatabaseRow): SupportTicketRecord {
 function mapPaymentRequest(row: DatabaseRow): PaymentRequestRecord {
   const type = asString(readValue(row, "type"), "deposit");
   const rawStatus = asString(readValue(row, "status"), "requested");
-  const status = ({ requested: "pending", under_review: "processing", approved: "approved", rejected: "rejected", settled: "approved", cancelled: "rejected", failed: "rejected" } as Record<string, PaymentRequestRecord["status"]>)[rawStatus] ?? "pending";
+  const status = ({ requested: "pending", under_review: "processing", approved: "approved", rejected: "rejected", settled: "settled", cancelled: "cancelled", failed: "failed" } as Record<string, PaymentRequestRecord["status"]>)[rawStatus] ?? "pending";
   return {
     id: asString(readValue(row, "id")),
     email: asString(readValue(row, "email")),
