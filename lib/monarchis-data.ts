@@ -492,7 +492,12 @@ async function insertMappedRow(
   }
 
   const idColumn = findColumn(columns, "id");
-  if (idColumn && !input.id && !idColumn.column_default) {
+  if (
+    idColumn &&
+    !input.id &&
+    !insertColumns.includes(idColumn.column_name) &&
+    !idColumn.column_default
+  ) {
     if (idColumn.data_type === "uuid" || ["text", "character varying", "character"].includes(idColumn.data_type)) {
       insertColumns.push(idColumn.column_name);
       insertValues.push(randomUUID());
