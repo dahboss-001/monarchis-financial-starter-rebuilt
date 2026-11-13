@@ -243,6 +243,7 @@ const COLUMN_ALIASES: Record<string, string[]> = {
   summary: ["summary", "description"],
   actor: ["actor", "actor_email", "user_email", "performed_by"],
   actorUserId: ["actor_user_id"],
+  entityType: ["entity_type"],
   action: ["action", "action_type", "event_type"],
   detail: ["detail", "details", "metadata", "event_data"],
 };
@@ -635,6 +636,7 @@ async function ensureUserProfile(
       "user_profile_created",
       "Authenticated user profile linked to the application.",
       userId,
+      TABLE_NAMES.users,
     );
   }
 
@@ -647,6 +649,7 @@ async function addAuditEvent(
   action: string,
   detail: string,
   userId?: unknown,
+  entityType = "application",
 ): Promise<AuditLogRecord | null> {
   const columns = await getTableColumns(TABLE_NAMES.auditEvents, client);
   if (!columns.length || !findColumn(columns, "action")) return null;
@@ -658,8 +661,9 @@ async function addAuditEvent(
       ? { detail }
       : detail,
     actorUserId: userId,
+    entityType,
     createdAt: getIsoNow(),
-  }, ["actor", "action"]);
+  }, ["actor", "action", "entityType"]);
   return mapAuditEvent(row);
 }
 
@@ -703,7 +707,7 @@ async function createDatabaseRecord(
       input.appUserId = user.id;
     }
     const record = await insertMappedRow(client, tableName, input, requiredFields);
-    await addAuditEvent(client, audit.actor, audit.action, audit.detail, user?.id);
+    await addAuditEvent(client, audit.actor, audit.action, audit.detail, user?.id, tableName);
     return record;
   });
 }
