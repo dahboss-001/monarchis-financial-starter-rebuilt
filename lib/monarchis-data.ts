@@ -409,18 +409,25 @@ async function selectRows(
   const values: unknown[] = [];
   let whereClause = "";
   if (options.email) {
-    const emailColumn = findColumn(columns, "email") ?? findColumn(columns, "applicantEmail");
-    if (emailColumn) {
-      values.push(options.email);
-      whereClause = ` WHERE LOWER(${quoteIdentifier(emailColumn.column_name)}::text) = LOWER($1)`;
-    } else {
-      const ownerColumn = findColumn(columns, "appUserId");
+    // Prefer the authoritative foreign-key relationship for personal records.
+    // Email is a mutable display/contact field and must not determine ownership
+    // when the table has a user_id-style owner column.
+    const ownerColumn = findColumn(columns, "appUserId");
+    if (ownerColumn) {
       const userId = await findUserIdByEmail(options.email, queryable);
-      if (!ownerColumn || !userId) {
+      if (!userId) {
         throw new Error(`Table "${tableName}" cannot be safely scoped to the current user.`);
       }
       values.push(userId);
       whereClause = ` WHERE ${quoteIdentifier(ownerColumn.column_name)}::text = $1`;
+    } else {
+      // Compatibility fallback only for legacy tables without an owner FK.
+      const emailColumn = findColumn(columns, "email") ?? findColumn(columns, "applicantEmail");
+      if (!emailColumn) {
+        throw new Error(`Table "${tableName}" cannot be safely scoped to the current user.`);
+      }
+      values.push(options.email);
+      whereClause = ` WHERE LOWER(${quoteIdentifier(emailColumn.column_name)}::text) = LOWER($1)`;
     }
   }
 
