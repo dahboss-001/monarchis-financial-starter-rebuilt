@@ -30,6 +30,8 @@ CREATE INDEX IF NOT EXISTS investment_products_status_created_at_idx
 -- The existing kyc_cases table already owns the user relationship, country_code,
 -- status and review fields. Add only the application fields absent from that schema.
 ALTER TABLE public.kyc_cases
+  ADD COLUMN IF NOT EXISTS email text,
+  ADD COLUMN IF NOT EXISTS country text,
   ADD COLUMN IF NOT EXISTS first_name text,
   ADD COLUMN IF NOT EXISTS last_name text,
   ADD COLUMN IF NOT EXISTS document_type text,
@@ -38,6 +40,7 @@ ALTER TABLE public.kyc_cases
 -- Keep the original support_tickets ownership, status and priority constraints.
 -- Store the user's message on the ticket instead of inventing a separate message table.
 ALTER TABLE public.support_tickets
+  ADD COLUMN IF NOT EXISTS email text,
   ADD COLUMN IF NOT EXISTS message text;
 
 COMMIT;
