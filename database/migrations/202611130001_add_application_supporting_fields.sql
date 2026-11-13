@@ -47,6 +47,10 @@ ALTER TABLE public.support_tickets
   ADD COLUMN IF NOT EXISTS email text,
   ADD COLUMN IF NOT EXISTS message text;
 
+-- Email is a display field; user_id remains the authoritative ownership relationship.
+ALTER TABLE public.payment_requests
+  ADD COLUMN IF NOT EXISTS email text;
+
 COMMIT;
 
 -- No customer records, financial accounts, ledger entries, or payment requests
