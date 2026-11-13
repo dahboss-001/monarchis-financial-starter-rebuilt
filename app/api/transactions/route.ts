@@ -48,8 +48,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Amount must be a positive number." }, { status: 400 });
   }
 
-  if (!currency || !paymentMethod) {
-    return NextResponse.json({ message: "Currency and payment method are required." }, { status: 400 });
+  if (!["USD", "EUR", "GBP"].includes(currency.toUpperCase()) || !paymentMethod) {
+    return NextResponse.json({ message: "Choose USD, EUR, or GBP and provide a payment method." }, { status: 400 });
+  }
+
+  if (!Number.isSafeInteger(Math.round(amount * 100))) {
+    return NextResponse.json({ message: "Amount is too large to process safely." }, { status: 400 });
   }
 
   try {
