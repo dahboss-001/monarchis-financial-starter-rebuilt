@@ -1054,7 +1054,7 @@ export async function getAdminOverview(): Promise<AdminOverview> {
   return {
     totals: {
       users: state.users.length,
-      activeUsers: state.users.filter((user) => user.status !== "suspended").length,
+      activeUsers: state.users.filter((user) => user.status === "verified").length,
       pendingKyc,
       pendingDeposits,
       pendingWithdrawals,
