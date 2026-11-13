@@ -219,7 +219,7 @@ const COLUMN_ALIASES: Record<string, string[]> = {
   email: ["email", "user_email", "applicant_email"],
   applicantEmail: ["applicant_email", "email", "user_email"],
   name: ["name", "full_name", "display_name"],
-  status: ["status", "state", "request_status", "kyc_status", "ticket_status", "product_status"],
+  status: ["status", "state", "request_status", "kyc_status", "ticket_status", "product_status", "account_status"],
   createdAt: ["created_at", "createdat", "submitted_at", "requested_at"],
   updatedAt: ["updated_at", "updatedat", "modified_at"],
   firstName: ["first_name", "firstname"],
@@ -230,9 +230,11 @@ const COLUMN_ALIASES: Record<string, string[]> = {
   subject: ["subject", "title"],
   message: ["message", "body", "content"],
   type: ["type", "request_type", "transaction_type"],
+  amountMinor: ["amount_minor"],
+  paymentProvider: ["payment_provider"],
   amount: ["amount", "requested_amount"],
   currency: ["currency", "currency_code"],
-  paymentMethod: ["payment_method", "paymentmethod", "method"],
+  paymentMethod: ["payment_method", "paymentmethod", "method", "payment_provider"],
   riskBand: ["risk_band", "riskband"],
   minAmount: ["min_amount", "minimum_amount", "minamount"],
   maxAmount: ["max_amount", "maximum_amount", "maxamount"],
@@ -240,6 +242,7 @@ const COLUMN_ALIASES: Record<string, string[]> = {
   durationMonths: ["duration_months", "durationmonths", "term_months"],
   summary: ["summary", "description"],
   actor: ["actor", "actor_email", "user_email", "performed_by"],
+  actorUserId: ["actor_user_id"],
   action: ["action", "action_type", "event_type"],
   detail: ["detail", "details", "metadata", "event_data"],
 };
@@ -318,7 +321,8 @@ function mapProduct(row: DatabaseRow): ProductRecord {
 }
 
 function mapKycCase(row: DatabaseRow): KycCaseRecord {
-  const status = asString(readValue(row, "status"), "submitted");
+  const rawStatus = asString(readValue(row, "status"), "submitted");
+  const status = rawStatus === "in_review" ? "under_review" : rawStatus;
   return {
     id: asString(readValue(row, "id")),
     applicantEmail: asString(readValue(row, "applicantEmail") ?? readValue(row, "email")),
@@ -351,31 +355,30 @@ function mapSupportTicket(row: DatabaseRow): SupportTicketRecord {
 
 function mapPaymentRequest(row: DatabaseRow): PaymentRequestRecord {
   const type = asString(readValue(row, "type"), "deposit");
-  const status = asString(readValue(row, "status"), "pending");
+  const rawStatus = asString(readValue(row, "status"), "requested");
+  const status = ({ requested: "pending", under_review: "processing", approved: "approved", rejected: "rejected", settled: "approved", cancelled: "rejected", failed: "rejected" } as Record<string, PaymentRequestRecord["status"]>)[rawStatus] ?? "pending";
   return {
     id: asString(readValue(row, "id")),
     email: asString(readValue(row, "email")),
     type: (type === "withdrawal" ? "withdrawal" : "deposit"),
-    amount: asNumber(readValue(row, "amount")),
+    amount: asNumber(readValue(row, "amountMinor")) / 100,
     currency: asString(readValue(row, "currency"), "USD"),
     paymentMethod: asString(readValue(row, "paymentMethod")),
-    status: (["pending", "approved", "rejected", "processing"].includes(status)
-      ? status
-      : "pending") as PaymentRequestRecord["status"],
+    status,
+
     note: asString(readValue(row, "notes")),
     createdAt: asString(readValue(row, "createdAt")),
   };
 }
 
 function mapUser(row: DatabaseRow): UserRecord {
-  const status = asString(readValue(row, "status"), "registered");
+  const rawStatus = asString(readValue(row, "status"), "pending");
+  const status = ({ pending: "registered", active: "verified", restricted: "restricted", closed: "suspended" } as Record<string, UserRecord["status"]>)[rawStatus] ?? "registered";
   return {
     id: asString(readValue(row, "id")),
     email: asString(readValue(row, "email")),
     name: asString(readValue(row, "name")),
-    status: (["registered", "verified", "restricted", "suspended"].includes(status)
-      ? status
-      : "registered") as UserRecord["status"],
+    status,
     createdAt: asString(readValue(row, "createdAt")),
   };
 }
@@ -646,7 +649,7 @@ async function addAuditEvent(
   userId?: unknown,
 ): Promise<AuditLogRecord | null> {
   const columns = await getTableColumns(TABLE_NAMES.auditEvents, client);
-  if (!columns.length || !findColumn(columns, "actor") || !findColumn(columns, "action")) return null;
+  if (!columns.length || !findColumn(columns, "action")) return null;
   const detailColumn = findColumn(columns, "detail");
   const row = await insertMappedRow(client, TABLE_NAMES.auditEvents, {
     actor,
@@ -654,7 +657,7 @@ async function addAuditEvent(
     detail: detailColumn && ["json", "jsonb"].includes(detailColumn.data_type)
       ? { detail }
       : detail,
-    appUserId: userId,
+    actorUserId: userId,
     createdAt: getIsoNow(),
   }, ["actor", "action"]);
   return mapAuditEvent(row);
@@ -919,14 +922,14 @@ export async function createPaymentRequest(input: {
       {
         email: input.email,
         type: input.type,
-        amount: Number(input.amount),
+        amountMinor: Math.round(Number(input.amount) * 100),
         currency: input.currency.toUpperCase(),
         paymentMethod: input.paymentMethod,
         notes: input.note,
-        status: "pending",
+        status: "requested",
         createdAt: now,
       },
-      ["email", "type", "amount", "currency", "paymentMethod", "status"],
+      ["email", "type", "amountMinor", "currency", "paymentMethod", "status"],
       {
         actor: input.email,
         action: `payment_request_${input.type}`,
