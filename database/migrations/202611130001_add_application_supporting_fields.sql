@@ -37,6 +37,10 @@ ALTER TABLE public.kyc_cases
   ADD COLUMN IF NOT EXISTS document_type text,
   ADD COLUMN IF NOT EXISTS notes text;
 
+-- Preserve the structured actor_user_id audit link while adding the app's display-friendly actor field.
+ALTER TABLE public.audit_events
+  ADD COLUMN IF NOT EXISTS actor text;
+
 -- Keep the original support_tickets ownership, status and priority constraints.
 -- Store the user's message on the ticket instead of inventing a separate message table.
 ALTER TABLE public.support_tickets
