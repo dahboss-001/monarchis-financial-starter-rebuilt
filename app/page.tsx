@@ -14,6 +14,12 @@ const productCards = [
   { title: "Operational transparency", copy: "Client activity, support tickets and account actions remain visible through structured, auditable workflows." },
 ];
 
+const plansPreview = [
+  { name: "Monarchis Core", target: "2.0%", min: "$250 minimum" },
+  { name: "Monarchis Growth", target: "2.5%", min: "$2,500 minimum" },
+  { name: "Monarchis Prestige", target: "3.0%", min: "$25,000 minimum" },
+];
+
 const steps = [
   "Register and create your secure account.",
   "Complete verification and review requirements.",
@@ -41,8 +47,11 @@ export default function Home() {
               </p>
               <div className="cta-row">
                 <a className="goldbtn" href="/auth">Open client portal</a>
-                <a className="outline" href="/services">Explore services</a>
+                <a className="outline" href="/plans">View investment plans</a>
               </div>
+              <p className="hero-note">
+                Currently in demonstration mode: explore the full experience with a simulated portfolio. No deposits are accepted.
+              </p>
             </div>
             <div className="hero-panel">
               <div className="eyebrow">WHY CLIENTS CHOOSE US</div>
@@ -74,6 +83,26 @@ export default function Home() {
                 <p>{card.copy}</p>
               </article>
             ))}
+          </div>
+        </section>
+
+        <section className="section">
+          <div className="eyebrow">INVESTMENT PLANS</div>
+          <h2>Realistic targets, stated plainly.</h2>
+          <p>
+            Three programs with annual target net returns of 2.0 to 3.0 percent. A target is a goal we manage toward, never a promise, and your capital is always at risk.
+          </p>
+          <div className="cards cards-three">
+            {plansPreview.map((plan) => (
+              <article className="card plan-mini" key={plan.name}>
+                <span>{plan.min}</span>
+                <h3>{plan.name}</h3>
+                <p className="plan-mini-target">{plan.target} <em>target p.a.</em></p>
+              </article>
+            ))}
+          </div>
+          <div className="cta-row">
+            <a className="goldbtn" href="/plans">Compare plans</a>
           </div>
         </section>
 

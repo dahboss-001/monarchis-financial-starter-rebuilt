@@ -125,6 +125,13 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
         <span className="pill">{data.status === "database-connected" ? "DATABASE CONNECTED" : "LOCAL REVIEW MODE"}</span>
       </div>
 
+      <div className="demo-banner">
+        <span className="badge badge-demo">DEMO MODE</span>
+        <p>
+          You are exploring a simulated account. Balances, requests and portfolio figures are for demonstration only: no real money is held, moved or invested.
+        </p>
+      </div>
+
       <div className="stats">
         {data.stats.map((item) => (
           <div className="stat" key={item.label}>
@@ -159,14 +166,15 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
 
       <div className="split stacked-layout">
         <section className="panel">
-          <h3>Portfolio overview</h3>
+          <h3>Portfolio overview <span className="badge badge-soft">SIMULATED</span></h3>
+          <p className="muted panel-note">Illustrative allocations only. Any return figures are annual targets, not guaranteed outcomes.</p>
           {data.portfolio.length ? data.portfolio.map((item) => (
             <div key={item.name} className="list-line">
               <span>{item.name}</span>
               <span>{item.allocation}</span>
               <em>{item.status}</em>
             </div>
-          )) : <p className="muted">No holdings are recorded. Investment execution is disabled.</p>}
+          )) : <p className="muted">No holdings are recorded in this demo workspace. Investment execution is disabled.</p>}
         </section>
 
         <section className="panel">
@@ -183,7 +191,8 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
 
       <div className="forms-grid">
         <section className="panel">
-          <h3>Deposit request</h3>
+          <h3>Deposit request <span className="badge badge-soft">SIMULATED</span></h3>
+          <p className="muted panel-note">Recorded for review only. No payment is collected and no funds move.</p>
           <form id="transaction-deposit" onSubmit={(event) => { event.preventDefault(); void submitTransaction("deposit"); }}>
             <div className="field-grid">
               <label>Amount<input name="amount" type="number" min={1} step="0.01" required /></label>
@@ -196,7 +205,8 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
         </section>
 
         <section className="panel">
-          <h3>Withdrawal request</h3>
+          <h3>Withdrawal request <span className="badge badge-soft">SIMULATED</span></h3>
+          <p className="muted panel-note">Recorded for review only. No payout is made while demo mode is active.</p>
           <form id="transaction-withdrawal" onSubmit={(event) => { event.preventDefault(); void submitTransaction("withdrawal"); }}>
             <div className="field-grid">
               <label>Amount<input name="amount" type="number" min={1} step="0.01" required /></label>
@@ -233,6 +243,16 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
             </div>
             <button type="submit" className="goldbtn" disabled={loading}>Create support ticket</button>
           </form>
+        </section>
+      </div>
+
+      <div className="split">
+        <section className="panel referral-panel">
+          <h3>Refer a friend</h3>
+          <p className="muted">
+            Invite friends to explore Monarchis in demo mode. Monarchis does not pay referral bonuses or commissions, and never will tie rewards to other people’s deposits.
+          </p>
+          <span className="badge badge-soft">COMING SOON</span>
         </section>
       </div>
 
