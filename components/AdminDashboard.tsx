@@ -75,6 +75,13 @@ export default function AdminDashboard({ initialData }: { initialData: AdminOver
         <span className="pill">ADMIN ACCESS</span>
       </div>
 
+      <div className="demo-banner">
+        <span className="badge badge-demo">REVIEW ENVIRONMENT</span>
+        <p>
+          Live financial execution is disabled. Products created here stay in draft, must describe returns as annual targets rather than guarantees, and require approval before any client sees them.
+        </p>
+      </div>
+
       <div className="stats">
         {[
           ["Client records", String(data.totals.users)],

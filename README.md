@@ -24,3 +24,25 @@ The UI does not create financial accounts or move money. KYC, database profile l
 The app now includes a premium public website, client dashboard, and admin dashboard. Configure `DATABASE_URL` to use Neon PostgreSQL; `/api/health/database` performs a read-only `SELECT 1` check and returns only `connected`, `unconfigured`, or `unavailable`. Database reads inspect the active schema and map only recognized columns. Writes use parameterized values and transactions, including audit events when the existing schema supports them. The application does not create, alter, or delete database tables.
 
 The JSON store is development-only. It is never used in production, and database errors do not silently fall back to local data. The existing schema must include compatible tables and columns for each operation; the repository does not establish that the live schema matches its documentation. In particular, product persistence requires an existing `investment_products` table. No real-money processing or investment execution is enabled.
+
+## Premium redesign (November 2026)
+
+### What was built
+- New `/plans` page: three investment programs (Core $250+, Growth $2,500+, Prestige $25,000) with annual target net returns of 2.0-3.0%. Every figure is labeled "target, not guaranteed" with capital-at-risk notices, and each card states the platform runs in demonstration mode.
+- Home page: plans preview section and a demonstration-mode note in the hero.
+- Client dashboard: prominent DEMO MODE banner, SIMULATED labels on portfolio, deposit and withdrawal panels, and a referral panel that explicitly states Monarchis pays no referral bonuses or commissions.
+- Richer site footer with a standing legal line: no deposits accepted, no live products, returns are targets, capital at risk.
+- Premium visual pass: refined buttons, hover states, rounded cards, badges, responsive plan grid and footer layout.
+- `/plans` added to the middleware public routes.
+
+### Intentionally disabled (do not enable without the items below)
+- Real deposits, withdrawals, payouts and any money movement.
+- Payment processing, crypto custody and blockchain integration.
+- Referral payouts of any kind.
+- Any guaranteed-return language, fake testimonials, fake live counters or licensing badges.
+
+### Path to live operation
+1. Regulator and license number confirmed on the regulator's public register, with legal review of the exact wording the license permits on the site.
+2. A licensed payment/custody partner connected for money movement.
+3. Security review, SMTP and production environment hardening as described above.
+Until all three are complete, the platform must remain in demonstration mode.
