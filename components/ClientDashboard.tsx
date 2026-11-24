@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import SimulatedChart from "./SimulatedChart";
 import type { DashboardOverview } from "@/lib/monarchis-data";
 
 export default function ClientDashboard({ initialData }: { initialData: DashboardOverview }) {
@@ -163,6 +164,12 @@ export default function ClientDashboard({ initialData }: { initialData: Dashboar
           )) : <p className="muted">No notifications are available.</p>}
         </section>
       </div>
+
+      <section className="panel panel-wide">
+        <h3>Portfolio performance <span className="badge badge-soft">SIMULATED</span></h3>
+        <p className="muted panel-note">Illustration only: a hypothetical $10,000 demo portfolio over 12 months against its 2.5% p.a. target path. Not a real account, not a prediction.</p>
+        <SimulatedChart />
+      </section>
 
       <div className="split stacked-layout">
         <section className="panel">

@@ -21,12 +21,17 @@ export default function Page() {
       </header>
       <main className="content">
         <div className="cards">
-          {services.map(([title, copy]) => (
+          {services.map(([title, copy], i) => (
             <article className="card" key={title}>
+              <span>0{i + 1}</span>
               <h3>{title}</h3>
               <p>{copy}</p>
             </article>
           ))}
+        </div>
+        <div className="cta-row spacer-block">
+          <a className="goldbtn" href="/plans">View investment plans</a>
+          <a className="outline" href="/auth">Open client portal</a>
         </div>
       </main>
       <SiteFooter />

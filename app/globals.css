@@ -741,3 +741,96 @@ footer a { color: var(--muted); text-decoration: none; }
   .footer-grid { grid-template-columns: 1fr; }
   .plan-target strong { font-size: 38px; }
 }
+
+/* ===== Round 2: markets table, chart, timeline, contact ===== */
+.section-head-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.section-head-row h2 { margin: 0; }
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--l);
+  border-radius: 6px;
+  margin-top: 16px;
+}
+.market-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 560px;
+}
+.market-table th {
+  text-align: left;
+  color: var(--m);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--l);
+  background: rgba(255,255,255,0.02);
+}
+.market-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  color: var(--c);
+}
+.market-table tr:last-child td { border-bottom: 0; }
+.market-table .pos { color: #7fc98a; }
+.market-table .neg { color: #d98a8a; }
+
+.panel-wide { margin-top: 18px; }
+.simchart { margin-top: 14px; }
+.simchart svg { width: 100%; height: auto; display: block; }
+.simchart-legend {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.dot {
+  display: inline-block;
+  width: 14px;
+  height: 3px;
+  vertical-align: middle;
+  margin-right: 7px;
+  border-radius: 2px;
+}
+.dot-gold { background: var(--g); }
+.dot-dash { background: repeating-linear-gradient(90deg, #6b7c8d 0 4px, transparent 4px 8px); }
+
+.timeline { display: grid; gap: 14px; margin-top: 26px; }
+.timeline-item {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  background: var(--n2);
+  border: 1px solid var(--l);
+  border-radius: 6px;
+  padding: 22px 24px;
+}
+.timeline-item strong {
+  flex: 0 0 auto;
+  display: inline-flex;
+  width: 34px;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--g);
+  border-radius: 999px;
+  color: var(--g);
+  font-size: 13px;
+}
+.timeline-item h3 { font: 18px Georgia, serif; margin: 4px 0 6px; }
+.timeline-item p { margin: 0; color: var(--m); font-size: 13px; line-height: 1.7; }
+
+.contact-card .outline { margin-top: 16px; padding: 10px 14px; font-size: 12px; }
+
+.content-wide h2, .content-wide h3 { font-family: Georgia, serif; color: var(--c); }
+.content-wide p { line-height: 1.8; }
+.content-wide .content-grid { margin-top: 10px; }
