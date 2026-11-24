@@ -834,3 +834,80 @@ footer a { color: var(--muted); text-decoration: none; }
 .content-wide h2, .content-wide h3 { font-family: Georgia, serif; color: var(--c); }
 .content-wide p { line-height: 1.8; }
 .content-wide .content-grid { margin-top: 10px; }
+
+/* ===== Round 3: plan terms, auth split, legal, 404 ===== */
+.plan-terms {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.plan-terms span {
+  border: 1px solid var(--l);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.compare-table td:first-child { font-size: 12px; }
+
+.auth-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 82vh;
+}
+.auth-side {
+  padding: 90px 7vw;
+  background: radial-gradient(ellipse at 20% 20%, rgba(32, 70, 101, 0.7), transparent 55%), var(--n3);
+  border-right: 1px solid var(--l);
+}
+.auth-side h1 { font: clamp(34px, 3.6vw, 50px) Georgia, serif; margin: 20px 0 16px; }
+.auth-points {
+  margin: 30px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+.auth-points li {
+  padding-left: 26px;
+  position: relative;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.auth-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--g);
+  border-radius: 999px;
+}
+.auth-panel-wrap {
+  display: grid;
+  place-items: center;
+  padding: 60px 6vw;
+}
+
+.legal-section { margin-top: 28px; }
+.legal-section h2 { font-size: 20px; margin-bottom: 8px; }
+.legal-section p { color: var(--muted); max-width: 720px; }
+
+.notfound {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 12vw;
+}
+.notfound h1 { font: clamp(34px, 4.5vw, 56px) Georgia, serif; margin: 20px 0 14px; }
+
+@media (max-width: 900px) {
+  .auth-split { grid-template-columns: 1fr; }
+  .auth-side { border-right: 0; border-bottom: 1px solid var(--l); padding: 60px 7vw; }
+}
